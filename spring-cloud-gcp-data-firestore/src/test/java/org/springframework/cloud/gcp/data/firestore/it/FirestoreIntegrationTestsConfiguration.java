@@ -26,11 +26,9 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.auth.MoreCallCredentials;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.gcp.data.firestore.FirestoreTemplate;
 import org.springframework.cloud.gcp.data.firestore.mapping.FirestoreMappingContext;
 import org.springframework.cloud.gcp.data.firestore.repository.config.EnableReactiveFirestoreRepositories;
-import org.springframework.cloud.gcp.data.firestore.transaction.ReactiveFirestoreTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -46,7 +44,7 @@ public class FirestoreIntegrationTestsConfiguration {
 	String defaultParent;
 
 	@Bean
-	FirestoreGrpc.FirestoreStub firestoreStub()  throws IOException {
+	public FirestoreTemplate firestoreTemplate() throws IOException {
 		GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 		CallCredentials callCredentials = MoreCallCredentials.from(credentials);
 
@@ -54,25 +52,13 @@ public class FirestoreIntegrationTestsConfiguration {
 		ManagedChannel channel = ManagedChannelBuilder
 				.forAddress("firestore.googleapis.com", 443)
 				.build();
-		return FirestoreGrpc.newStub(channel).withCallCredentials(callCredentials);
-	}
 
-	@Bean
-	public FirestoreTemplate firestoreTemplate(FirestoreGrpc.FirestoreStub firestoreStub) {
-
-		return new FirestoreTemplate(firestoreStub, this.defaultParent);
+		return new FirestoreTemplate(FirestoreGrpc.newStub(channel).withCallCredentials(callCredentials),
+				defaultParent);
 	}
 
 	@Bean
 	public FirestoreMappingContext firestoreMappingContext() {
 		return new FirestoreMappingContext();
 	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public ReactiveFirestoreTransactionManager firestoreTransactionManager(
-			FirestoreGrpc.FirestoreStub firestoreStub) {
-		return new ReactiveFirestoreTransactionManager(firestoreStub, this.defaultParent);
-	}
-
 }
