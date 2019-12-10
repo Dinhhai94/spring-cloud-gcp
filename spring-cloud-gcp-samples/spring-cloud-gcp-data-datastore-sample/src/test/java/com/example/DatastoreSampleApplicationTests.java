@@ -115,9 +115,6 @@ public class DatastoreSampleApplicationTests {
 		Singer richardRoe = new Singer(null, "Richard", "Roe", null);
 		Singer frodoBaggins = new Singer(null, "Frodo", "Baggins", null);
 
-		Awaitility.await().atMost(15, TimeUnit.SECONDS)
-				.until(() -> getSingers("/singers?sort=lastName,ASC").size() == 3);
-
 		List<Singer> singersAsc = getSingers("/singers?sort=lastName,ASC");
 		assertThat(singersAsc)
 				.as("Verify ASC order")

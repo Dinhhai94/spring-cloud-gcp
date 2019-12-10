@@ -102,7 +102,6 @@ public class CloudVisionAutoConfiguration {
 		ThreadPoolTaskExecutor ackExecutor = new ThreadPoolTaskExecutor();
 		ackExecutor.setMaxPoolSize(this.cloudVisionProperties.getExecutorThreadsCount());
 		ackExecutor.setThreadNamePrefix("gcp-cloud-vision-ocr-executor");
-		ackExecutor.setDaemon(true);
 		return ackExecutor;
 	}
 

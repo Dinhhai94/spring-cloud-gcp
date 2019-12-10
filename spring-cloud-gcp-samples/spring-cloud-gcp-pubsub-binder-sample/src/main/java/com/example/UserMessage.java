@@ -31,16 +31,13 @@ public class UserMessage {
 
 	private LocalDateTime createdAt;
 
-	private boolean throwError;
-
 	public UserMessage() {
 	}
 
-	public UserMessage(String body, String username, LocalDateTime createdAt, boolean throwError) {
+	public UserMessage(String body, String username, LocalDateTime createdAt) {
 		this.body = body;
 		this.username = username;
 		this.createdAt = createdAt;
-		this.throwError = throwError;
 	}
 
 	public String getBody() {
@@ -65,13 +62,5 @@ public class UserMessage {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	public boolean isThrowError() {
-		return throwError;
-	}
-
-	public void setThrowError(boolean throwError) {
-		this.throwError = throwError;
 	}
 }
